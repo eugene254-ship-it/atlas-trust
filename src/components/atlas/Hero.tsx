@@ -51,13 +51,15 @@ export function Hero() {
           style={{ animationDelay: "0.3s" }}
         >
           <a
-            href="#"
+            href="#network"
+            onClick={() => analytics.conversion("begin_stewardship", { location: "hero" })}
             className="glow-emerald rounded-lg bg-emerald px-8 py-3.5 font-medium text-primary-foreground transition-transform hover:scale-105"
           >
             Begin Stewardship
           </a>
           <a
             href="#network"
+            onClick={() => analytics.conversion("explore_network", { location: "hero" })}
             className="rounded-lg border border-border bg-card/40 px-8 py-3.5 font-medium text-foreground backdrop-blur transition-colors hover:border-aurora/60"
           >
             Explore the Network
