@@ -5,10 +5,11 @@ import { useSettings } from "@/lib/settings";
 
 export function Hero() {
   const glowRef = useRef<HTMLDivElement>(null);
+  const { reducedMotion } = useSettings();
 
   useEffect(() => {
     const el = glowRef.current;
-    if (!el) return;
+    if (!el || reducedMotion) return;
     const onMove = (e: MouseEvent) => {
       const x = (e.clientX / window.innerWidth) * 100;
       const y = (e.clientY / window.innerHeight) * 100;
@@ -16,7 +17,7 @@ export function Hero() {
     };
     window.addEventListener("mousemove", onMove);
     return () => window.removeEventListener("mousemove", onMove);
-  }, []);
+  }, [reducedMotion]);
 
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
