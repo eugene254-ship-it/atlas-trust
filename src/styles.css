@@ -164,3 +164,70 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ---- Accessibility: keyboard focus ---- */
+:where(a, button, input, [tabindex]):focus-visible {
+  outline: 2px solid var(--aurora);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  transform: translateY(-150%);
+  background: var(--emerald);
+  color: var(--primary-foreground);
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: transform 0.2s ease-out;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+/* ---- Accessibility: reduced motion ---- */
+.reduce-motion *,
+.reduce-motion *::before,
+.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+.reduce-motion .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---- Accessibility: high contrast ---- */
+.high-contrast {
+  --background: oklch(0.08 0.01 240);
+  --foreground: oklch(1 0 0);
+  --muted-foreground: oklch(0.9 0.01 240);
+  --card: oklch(0.14 0.015 240);
+  --border: oklch(0.85 0.02 240 / 70%);
+  --emerald: oklch(0.85 0.2 162);
+  --gold: oklch(0.9 0.15 92);
+  --aurora: oklch(0.88 0.14 220);
+}
+.high-contrast .text-muted-foreground {
+  color: var(--foreground);
+}
+
+/* ---- Accessibility: large text ---- */
+.large-text {
+  font-size: 1.125rem;
+}
+
