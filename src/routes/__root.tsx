@@ -11,6 +11,9 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { SettingsProvider } from "../lib/settings";
+import { LiveFeedProvider } from "../lib/live-feed";
+import { AccessibilityControls } from "../components/atlas/AccessibilityControls";
 
 function NotFoundComponent() {
   return (
@@ -124,8 +127,16 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <SettingsProvider>
+        <LiveFeedProvider>
+          <a href="#main-content" className="skip-link">
+            Skip to content
+          </a>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+          <AccessibilityControls />
+        </LiveFeedProvider>
+      </SettingsProvider>
     </QueryClientProvider>
   );
 }

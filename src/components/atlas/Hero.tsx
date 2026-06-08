@@ -1,12 +1,15 @@
 import { useEffect, useRef } from "react";
 import earthHero from "@/assets/earth-hero.jpg";
+import { analytics } from "@/lib/analytics";
+import { useSettings } from "@/lib/settings";
 
 export function Hero() {
   const glowRef = useRef<HTMLDivElement>(null);
+  const { reducedMotion } = useSettings();
 
   useEffect(() => {
     const el = glowRef.current;
-    if (!el) return;
+    if (!el || reducedMotion) return;
     const onMove = (e: MouseEvent) => {
       const x = (e.clientX / window.innerWidth) * 100;
       const y = (e.clientY / window.innerHeight) * 100;
@@ -14,7 +17,7 @@ export function Hero() {
     };
     window.addEventListener("mousemove", onMove);
     return () => window.removeEventListener("mousemove", onMove);
-  }, []);
+  }, [reducedMotion]);
 
   return (
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
@@ -48,13 +51,15 @@ export function Hero() {
           style={{ animationDelay: "0.3s" }}
         >
           <a
-            href="#"
+            href="#network"
+            onClick={() => analytics.conversion("begin_stewardship", { location: "hero" })}
             className="glow-emerald rounded-lg bg-emerald px-8 py-3.5 font-medium text-primary-foreground transition-transform hover:scale-105"
           >
             Begin Stewardship
           </a>
           <a
             href="#network"
+            onClick={() => analytics.conversion("explore_network", { location: "hero" })}
             className="rounded-lg border border-border bg-card/40 px-8 py-3.5 font-medium text-foreground backdrop-blur transition-colors hover:border-aurora/60"
           >
             Explore the Network
