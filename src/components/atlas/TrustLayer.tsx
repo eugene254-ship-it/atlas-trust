@@ -35,8 +35,8 @@ export function TrustLayer() {
             {[...Array(18)].map((_, i) => {
               const a = (i / 18) * Math.PI * 2;
               const r = 150 + (i % 3) * 45;
-              const x = 400 + Math.cos(a) * r;
-              const y = 225 + Math.sin(a) * r * 0.55;
+              const x = Math.round((400 + Math.cos(a) * r) * 100) / 100;
+              const y = Math.round((225 + Math.sin(a) * r * 0.55) * 100) / 100;
               return (
                 <g key={i}>
                   <line
