@@ -11,6 +11,9 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { SettingsProvider } from "../lib/settings";
+import { LiveFeedProvider } from "../lib/live-feed";
+import { AccessibilityControls } from "../components/atlas/AccessibilityControls";
 
 function NotFoundComponent() {
   return (
