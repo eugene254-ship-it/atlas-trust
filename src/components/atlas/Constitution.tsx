@@ -47,6 +47,12 @@ export function Constitution() {
                 </div>
               ))}
             </div>
+            <Link
+              to="/constitution"
+              className="reveal mt-8 inline-flex items-center gap-2 rounded-lg border border-gold/50 bg-gold/10 px-6 py-3 font-medium text-gold transition-colors hover:bg-gold/20"
+            >
+              Read the full Constitution →
+            </Link>
           </div>
         </div>
       </div>
