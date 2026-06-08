@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import earthHero from "@/assets/earth-hero.jpg";
+import { analytics } from "@/lib/analytics";
+import { useSettings } from "@/lib/settings";
 
 export function Hero() {
   const glowRef = useRef<HTMLDivElement>(null);
