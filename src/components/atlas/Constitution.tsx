@@ -1,3 +1,4 @@
+import { Link } from "@tanstack/react-router";
 import { useReveal } from "@/hooks/use-reveal";
 import constitution from "@/assets/constitution.jpg";
 
