@@ -46,6 +46,7 @@ export function GlobeSection() {
     let currentPhi = 0;
     let currentTheta = 0.2;
     let currentScale = 1;
+    let raf = 0;
     const doublePi = Math.PI * 2;
 
     const onResize = () => {
@@ -69,29 +70,36 @@ export function GlobeSection() {
       markerColor: [0, 0.76, 0.48],
       glowColor: [0.1, 0.3, 0.35],
       markers,
-      onRender: (state) => {
-        if (autoRotateRef.current) {
-          currentPhi += reducedRef.current ? 0 : 0.0035;
-          currentTheta = currentTheta * 0.95 + 0.2 * 0.05;
-        } else {
-          const [focusPhi, focusTheta] = focusRef.current;
-          const distPositive = (focusPhi - currentPhi + doublePi) % doublePi;
-          const distNegative = (currentPhi - focusPhi + doublePi) % doublePi;
-          const ease = reducedRef.current ? 1 : 0.08;
-          if (distPositive < distNegative) currentPhi += distPositive * ease;
-          else currentPhi -= distNegative * ease;
-          currentTheta = currentTheta * (1 - ease) + focusTheta * ease;
-        }
-        currentScale += (targetScaleRef.current - currentScale) * (reducedRef.current ? 1 : 0.08);
-        state.phi = currentPhi;
-        state.theta = currentTheta;
-        state.scale = currentScale;
-        state.width = width * 2;
-        state.height = width * 2;
-      },
+      scale: 1,
     });
 
+    const tick = () => {
+      if (autoRotateRef.current) {
+        currentPhi += reducedRef.current ? 0 : 0.0035;
+        currentTheta = currentTheta * 0.95 + 0.2 * 0.05;
+      } else {
+        const [focusPhi, focusTheta] = focusRef.current;
+        const distPositive = (focusPhi - currentPhi + doublePi) % doublePi;
+        const distNegative = (currentPhi - focusPhi + doublePi) % doublePi;
+        const ease = reducedRef.current ? 1 : 0.08;
+        if (distPositive < distNegative) currentPhi += distPositive * ease;
+        else currentPhi -= distNegative * ease;
+        currentTheta = currentTheta * (1 - ease) + focusTheta * ease;
+      }
+      currentScale += (targetScaleRef.current - currentScale) * (reducedRef.current ? 1 : 0.08);
+      globe.update({
+        phi: currentPhi,
+        theta: currentTheta,
+        scale: currentScale,
+        width: width * 2,
+        height: width * 2,
+      });
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+
     return () => {
+      cancelAnimationFrame(raf);
       globe.destroy();
       window.removeEventListener("resize", onResize);
     };
