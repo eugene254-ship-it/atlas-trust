@@ -1,15 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { Nav } from "@/components/atlas/Nav";
 import { Hero } from "@/components/atlas/Hero";
 import { TrustLayer } from "@/components/atlas/TrustLayer";
 import { Problem } from "@/components/atlas/Problem";
 import { Solution } from "@/components/atlas/Solution";
-import { DigitalTwin } from "@/components/atlas/DigitalTwin";
+import { GlobeSection } from "@/components/atlas/GlobeSection";
 import { AgentEconomy } from "@/components/atlas/AgentEconomy";
 import { Constitution } from "@/components/atlas/Constitution";
 import { Dashboard } from "@/components/atlas/Dashboard";
 import { Vision } from "@/components/atlas/Vision";
 import { SiteFooter } from "@/components/atlas/SiteFooter";
+import { analytics } from "@/lib/analytics";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -32,20 +34,49 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+const sections: { id: string; node: React.ReactNode }[] = [
+  { id: "hero", node: <Hero /> },
+  { id: "network", node: <TrustLayer /> },
+  { id: "problem", node: <Problem /> },
+  { id: "solution", node: <Solution /> },
+  { id: "digital-twin", node: <GlobeSection /> },
+  { id: "agents", node: <AgentEconomy /> },
+  { id: "constitution", node: <Constitution /> },
+  { id: "dashboard", node: <Dashboard /> },
+  { id: "vision", node: <Vision /> },
+];
+
 function Index() {
+  useEffect(() => {
+    const stopScroll = analytics.registerScrollDepth();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        const name = visible[0]?.target.getAttribute("data-section");
+        if (name) analytics.setSection(name);
+      },
+      { threshold: 0.4 },
+    );
+    document.querySelectorAll("[data-section]").forEach((el) => observer.observe(el));
+    return () => {
+      stopScroll();
+      observer.disconnect();
+    };
+  }, []);
+
   return (
-    <main className="min-h-screen bg-background">
+    <>
       <Nav />
-      <Hero />
-      <TrustLayer />
-      <Problem />
-      <Solution />
-      <DigitalTwin />
-      <AgentEconomy />
-      <Constitution />
-      <Dashboard />
-      <Vision />
+      <main id="main-content">
+        {sections.map((s) => (
+          <div key={s.id} data-section={s.id}>
+            {s.node}
+          </div>
+        ))}
+      </main>
       <SiteFooter />
-    </main>
+    </>
   );
 }
